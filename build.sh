@@ -12,7 +12,7 @@ fi
 
 if [ ! -z "$CC" ]; then CCOPT=CC=$CC; fi
 if [ ! -z "$CXX" ]; then CXXOPT=CXX=$CXX; fi
-if [ $1 = 'interwork' ]; then IWOPT=INTERWORK=1; fi
+if [ "$1" = 'interwork' ]; then IWOPT=INTERWORK=1; fi
 make -C gcc clean
 make -C gcc old $CCOPT $CXXOPT
 mv gcc/old_agbcc .
