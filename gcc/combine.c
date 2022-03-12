@@ -10176,38 +10176,41 @@ simplify_comparison (code, pop0, pop1)
 	      && INTVAL (XEXP (op0, 1)) < HOST_BITS_PER_WIDE_INT
 	      && mode_width <= HOST_BITS_PER_WIDE_INT
 	      && (nonzero_bits (XEXP (op0, 0), mode)
-#ifdef OLD_COMPILER
-		  & (((HOST_WIDE_INT) 1 << INTVAL (XEXP (op0, 1))) - 1)) == 0
-	      && (const_op == 0
-		  || (floor_log2 (const_op) + INTVAL (XEXP (op0, 1))
-		      < mode_width)))
-	    {
-	      const_op <<= INTVAL (XEXP (op0, 1));
-	      op1 = GEN_INT (const_op);
-	      op0 = XEXP (op0, 0);
-	      continue;
-	    }
-#else
 		  & (((HOST_WIDE_INT) 1 << INTVAL (XEXP (op0, 1))) - 1)) == 0)
 	    {
-	      HOST_WIDE_UINT mask_after_shift = GET_MODE_MASK (mode) >> INTVAL (XEXP (op0, 1));
-	      HOST_WIDE_UINT overflow_check = const_op;
+	      if (!flag_2003_patch)
+	        {
+	          if (const_op == 0
+	            || (floor_log2 (const_op) + INTVAL (XEXP (op0, 1))
+	                < mode_width))
+	            {
+	              const_op <<= INTVAL (XEXP (op0, 1));
+	              op1 = GEN_INT (const_op);
+	              op0 = XEXP (op0, 0);
+	              continue;
+	            }
+	        }
+	      else
+	        {
+	          HOST_WIDE_UINT mask_after_shift = GET_MODE_MASK (mode) >> INTVAL (XEXP (op0, 1));
+	          HOST_WIDE_UINT overflow_check = const_op;
 
-	      /* if it's from fallthrough, make sure the sign bit (after shifting left) is not occupied */
-	      if (GET_CODE (op0) != LSHIFTRT)
-	        overflow_check = (mask_after_shift >> 1) + 1 + const_op;
+	          /* if it's from fallthrough, make sure the sign bit (after shifting left) is not occupied */
+	          if (GET_CODE (op0) != LSHIFTRT)
+	            overflow_check = (mask_after_shift >> 1) + 1 + const_op;
 
-	      if (overflow_check <= mask_after_shift)
-	      {
-	        if (GET_CODE (op0) == LSHIFTRT)
-	          code = unsigned_condition (code);
-	        const_op <<= INTVAL (XEXP (op0, 1));
-	        op1 = GEN_INT (const_op);
-	        op0 = XEXP (op0, 0);
-	        continue;
-	      }
+	          if (overflow_check <= mask_after_shift)
+	          {
+	            if (GET_CODE (op0) == LSHIFTRT)
+	              code = unsigned_condition (code);
+	            const_op <<= INTVAL (XEXP (op0, 1));
+	            op1 = GEN_INT (const_op);
+	            op0 = XEXP (op0, 0);
+	            continue;
+	          }
+	        }
 	    }
-#endif
+
 	  /* If we are using this shift to extract just the sign bit, we
 	     can replace this with an LT or GE comparison.  */
 	  if (const_op == 0

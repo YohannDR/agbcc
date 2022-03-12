@@ -585,6 +585,9 @@ int flag_instrument_function_entry_exit = 0;
 /* Use hex instead of decimal in ASM output.  */
 int flag_hex_asm = 0;
 
+/* Enable the 2003 patch.  */
+int flag_2003_patch = 0;
+
 typedef struct
 {
     char *string;
@@ -724,6 +727,8 @@ lang_independent_options f_options[] =
      "Instrument function entry/exit with profiling calls"},
     {"hex-asm", &flag_hex_asm, 1,
      "Use hex instead of decimal in assembly output"},
+    {"2003-patch", &flag_2003_patch, 1,
+     "Enable the 2003 patch"},
 };
 
 #define NUM_ELEM(a)  (sizeof (a) / sizeof ((a)[0]))
