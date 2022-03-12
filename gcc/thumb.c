@@ -717,7 +717,7 @@ far_jump_used_p()
     rtx insn;
 
 #ifndef OLD_COMPILER
-    if (current_function_has_far_jump)
+    if (!flag_prologue_bugfix && current_function_has_far_jump)
         return 1;
 #endif
 

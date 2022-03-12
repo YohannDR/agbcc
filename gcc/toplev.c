@@ -588,6 +588,9 @@ int flag_hex_asm = 0;
 /* Enable the 2003 patch.  */
 int flag_2003_patch = 0;
 
+/* Fix prologue bug in new compiler.  */
+int flag_prologue_bugfix = 0;
+
 typedef struct
 {
     char *string;
@@ -729,6 +732,11 @@ lang_independent_options f_options[] =
      "Use hex instead of decimal in assembly output"},
     {"2003-patch", &flag_2003_patch, 1,
      "Enable the 2003 patch"},
+#ifndef OLD_COMPILER
+    /* This is needed to produce matching code for certain GBA games. */
+    {"prologue-bugfix", &flag_prologue_bugfix, 1,
+     "Prevent unnecessary saving of the lr register to the stack"},
+#endif
 };
 
 #define NUM_ELEM(a)  (sizeof (a) / sizeof ((a)[0]))

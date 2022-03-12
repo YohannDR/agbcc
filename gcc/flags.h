@@ -453,3 +453,6 @@ extern int flag_hex_asm;
 
 /* Nonzero if thumb_patch03-OCT-03 should be enabled.  */
 extern int flag_2003_patch;
+
+/* Nonzero if prologue bug should be fixed.  */
+extern int flag_prologue_bugfix;
