@@ -22,6 +22,10 @@ ASFLAGS := -mcpu=arm7tdmi
 CC1    := ../old_agbcc
 CFLAGS := -O2 -fno-builtin
 
+ifeq ($(INTERWORK),1)
+CFLAGS += -mthumb-interwork
+endif
+
 CPPFLAGS := -I ../ginclude -I include -nostdinc -undef \
 -DABORT_PROVIDED -DHAVE_GETTIMEOFDAY -D__thumb__ -DARM_RDI_MONITOR \
 -D__GNUC__ -DINTERNAL_NEWLIB -D__USER_LABEL_PREFIX__=

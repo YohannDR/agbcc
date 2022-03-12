@@ -16,6 +16,11 @@ export AS := $(PREFIX)as
 endif
 
 CC1 = ../old_agbcc
+CFLAGS := -O2
+
+ifeq ($(INTERWORK),1)
+CFLAGS += -mthumb-interwork
+endif
 
 libgcc.a: libgcc1.a libgcc2.a fp-bit.o dp-bit.o
 	$(AR) -x libgcc1.a;
@@ -55,7 +60,7 @@ libgcc2.a: libgcc2.c longlong.h
 	do \
 	  echo $${name}; \
 	  $(CPP) -undef -I ../ginclude -nostdinc -DL$${name} -o $${name}.i libgcc2.c; \
-	  $(CC1) -O2 $${name}.i; \
+	  $(CC1) $(CFLAGS) $${name}.i; \
 	  rm -f $${name}.i; \
 	  bash -c 'echo -e ".text\n\t.align\t2, 0\n"' >> $${name}.s ; \
 	  $(AS) -mcpu=arm7tdmi -o $${name}.o $${name}.s; \
@@ -67,7 +72,7 @@ libgcc2.a: libgcc2.c longlong.h
 
 fp-bit.o: fp-bit.c
 	$(CPP) -undef -I ../ginclude -nostdinc -o fp-bit.i fp-bit.c;
-	$(CC1) -O2 fp-bit.i
+	$(CC1) $(CFLAGS) fp-bit.i
 	rm -f fp-bit.i
 	bash -c 'echo -e ".text\n\t.align\t2, 0\n"' >> fp-bit.s
 	$(AS) -mcpu=arm7tdmi -o fp-bit.o fp-bit.s;
@@ -75,7 +80,7 @@ fp-bit.o: fp-bit.c
 
 dp-bit.o: dp-bit.c
 	$(CPP) -undef -I ../ginclude -nostdinc -o dp-bit.i dp-bit.c;
-	$(CC1) -O2 dp-bit.i
+	$(CC1) $(CFLAGS) dp-bit.i
 	rm -f dp-bit.i
 	bash -c 'echo -e ".text\n\t.align\t2, 0\n"' >> dp-bit.s
 	$(AS) -mcpu=arm7tdmi -o dp-bit.o dp-bit.s;

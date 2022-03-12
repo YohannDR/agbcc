@@ -2,6 +2,7 @@
 set -e
 CCOPT=
 CXXOPT=
+IWOPT=
 
 # error if devkitarm is not installed and binutils-arm-none-eabi is not installed
 if ! ([ -n "$DEVKITARM" ] && [ -d "$DEVKITARM/bin" ]) && ! (command -v arm-none-eabi-as &> /dev/null && command -v arm-none-eabi-ar &> /dev/null) ; then
@@ -11,6 +12,7 @@ fi
 
 if [ ! -z "$CC" ]; then CCOPT=CC=$CC; fi
 if [ ! -z "$CXX" ]; then CXXOPT=CXX=$CXX; fi
+if [ $1 = 'interwork' ]; then IWOPT=INTERWORK=1; fi
 make -C gcc clean
 make -C gcc old $CCOPT $CXXOPT
 mv gcc/old_agbcc .
@@ -22,8 +24,8 @@ rm -f gcc_arm/config.status gcc_arm/config.cache
 cd gcc_arm && ./configure --target=arm-elf --host=i386-linux-gnu && make cc1 && cd ..
 mv gcc_arm/cc1 agbcc_arm
 make -C libgcc clean
-make -C libgcc $CCOPT $CXXOPT
+make -C libgcc $CCOPT $CXXOPT $IWOPT
 mv libgcc/libgcc.a .
 make -C libc clean
-make -C libc $CCOPT $CXXOPT
+make -C libc $CCOPT $CXXOPT $IWOPT
 mv libc/libc.a .
