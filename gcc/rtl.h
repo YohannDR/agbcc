@@ -22,6 +22,7 @@ Boston, MA 02111-1307, USA.  */
 #define _RTL_H
 
 #include "machmode.h"
+#include <malloc.h>
 
 #undef FFS  /* Some systems predefine this symbol; don't let it interfere.  */
 #undef FLOAT /* Likewise.  */
